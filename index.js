@@ -3,23 +3,27 @@ const mysql = require('./sqlConnection').con;
 const bodyParser = require('body-parser');
 const app = express();
 const path = require('path');
-const dotenv = require('dotenv')
+const dotenv = require('dotenv');
+const { con } = require('./sqlConnection');
 dotenv.config();
 const port = process.env.PORT;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
+app.set('view engine', 'ejs');
+
 
 app.get('/', (req, res) =>{
-    res.sendFile(path.join(__dirname+"/public/login.html"))
+    res.render(__dirname+"/views/login.ejs")
 });
 
 app.get('/signup', (req, res) =>{
-    res.sendFile(path.join(__dirname+"/public/signup.html"))
+    res.render(__dirname+"/views/signup.ejs")
 });
 
 app.post('/signup', (req, res) =>{
+    let userid = 0;
     let fname = req.body.firstName;
     let mname = req.body.middleName;
     let lname = req.body.lastName;
@@ -60,13 +64,22 @@ app.post('/signup', (req, res) =>{
         let values1 = [
             [password, fname, mname, lname, userEmail, phoneNumber, adminEmail]
         ];
-        let userid;
+
         mysql.query(sql1, [values1], function(error, result){
             if(error) throw error;
-            res.send("User registered"+result.insertId);
-            userid = result.insertId;
+            res.render(__dirname+"/views/accDeets.ejs");
+ 
         })
 
+        
+    })
+});
+
+app.get("/accDeets", (req, res) =>{
+    res.render(__dirname+"/view/accDeets.ejs")
+});
+
+app.post("/accDeets", (req, res) =>{
         let sql2 = "INSERT INTO ACCOUNT(USER_ID, ACC_NO, ACC_TYPE, ACC_BAL) VALUES ?";
 
         let values2 =[
@@ -74,13 +87,27 @@ app.post('/signup', (req, res) =>{
             [userid, accNumber2, accType2, currentBal2]
         ];
 
+        console.log(values2);
+
         mysql.query(sql2, [values2], function(error, result){
             if(error) throw error;
             res.send("Account Details for Account "+ result.insertId + "filled");
 
         })
+})
+
+app.get('/landing', function(req, res){
+    con.connect(function(error){
+        if(error) console.log(error);
+
+        var data = "SELECT * from USER";
+        con.query(data, function(error, result){
+            if(error) console.log(error)
+            res.render(__dirname+"/views/landing", {users: result});
+        })
+
     })
-});
+})
 
 app.listen(port, ()=>{
     console.log(`Server connected on ${port}`);

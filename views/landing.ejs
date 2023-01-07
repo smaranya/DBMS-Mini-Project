@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users Data</title>
+</head>
+<body>
+       <h1>Users using this application</h1> 
+       <table>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+        </tr>
+
+        <% if(users.length > 0) { %>
+            <% for( var i = 0; i < users.length; i++ ) { %>
+                <tr>
+                    <td><%- users[i].FNAME + " "+ users[i].MNAME + " "+ users[i].LNAME%></td>
+                    <td><%- users[i].USER_EMAIL %></td>
+                    <td><%- users[i].USER_PHONE %></td>
+                </tr>
+            <% } %>   
+        <% }else{ %>
+            <h1>User Data not found!</h1>
+        <% } %>    
+              
+       </table>
+</body>
+</html>
