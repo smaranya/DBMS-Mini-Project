@@ -12,18 +12,33 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, "views"));
 
 
 app.get('/', (req, res) =>{
-    res.render(__dirname+"/views/login.ejs")
+    res.render("login");
 });
 
+app.post('/login', (req, res)=>{
+    let email = req.query.email;
+    let password = req.query.password;
+    if(email == "admin@gmail.com" && password == "admin@123"){
+        let print = 'SELECT * from USER WHERE ADMIN_EMAIL IN(SELECT ADMIN_EMAIL FROM USER WHERE ADMIN_EMAIL = ?)';
+                mysql.query(print, adminEmail, function(error, result){
+                    if(error) console.log(error)
+                    res.render("landing", {users: result});
+                })
+    }
+    else{
+        res.render('userland');
+    }
+})
+
 app.get('/signup', (req, res) =>{
-    res.render(__dirname+"/views/signup.ejs")
+    res.render("signup")
 });
 
 app.post('/signup', (req, res) =>{
-    let userid = 0;
     let fname = req.body.firstName;
     let mname = req.body.middleName;
     let lname = req.body.lastName;
@@ -56,9 +71,6 @@ app.post('/signup', (req, res) =>{
         currentBal3 = req.body.currentBal3;
     }
 
-    mysql.connect((error) =>{
-        if(error) throw error;
-
         let sql1 = "INSERT INTO USER(USER_PASSWORD, FNAME, MNAME, LNAME, USER_EMAIL, USER_PHONE, ADMIN_EMAIL) VALUES ?";
 
         let values1 = [
@@ -67,35 +79,44 @@ app.post('/signup', (req, res) =>{
 
         mysql.query(sql1, [values1], function(error, result){
             if(error) throw error;
-            userid = result.insertId;
+
             let sql2 = "INSERT INTO ACCOUNT(USER_ID, ACC_NO, ACC_TYPE, ACC_BAL) VALUES ?";
 
             let values2 =[
-                [userid, accNumber1, accType1, currentBal1],
-                [userid, accNumber2, accType2, currentBal2]
+                [result.insertId, accNumber1, accType1, currentBal1],
+                [result.insertId, accNumber2, accType2, currentBal2]
             ];
 
             console.log(values2);
 
-            mysql.query(sql2, [values2], function(error, result2){
+            mysql.query(sql2, [values2], function(error, result){
                 if(error) throw error;
-                let print = 'SELECT * from USER WHERE ADMIN_EMAIL IN(SELECT ADMIN_EMAIL FROM USER WHERE ADMIN_EMAIL = ?)';
-                mysql.query(print, adminEmail, function(error, result){
-                    if(error) console.log(error)
-                    res.render(__dirname+"/views/landing", {users: result});
-                })
+                res.render('login');
+                // if(userEmail == adminEmail){
+                // let print = 'SELECT * from USER WHERE ADMIN_EMAIL IN(SELECT ADMIN_EMAIL FROM USER WHERE ADMIN_EMAIL = ?)';
+                // mysql.query(print, adminEmail, function(error, result){
+                //     if(error) console.log(error)
+                //     res.render("landing", {users: result});
+                // })
+                // }
             })
         })
+    });
+
+    app.get('/adminHome', (req, res) => {
+        const admin = req.query.admin;
+        const password = req.query.password;
+        if (admin === "admin" && password === "admin@123") {
+            var query = "select * from student";
+            mysql.query(query, (error, result) => {
+                if (error) throw error;
+                res.render("adminHome", { result, success: true });
+            });
+        }
+        else {
+            res.render('home', { success: false });
+        }
     })
-});
-
-app.get("/accDeets", (req, res) =>{
-    res.render(__dirname+"/view/accDeets.ejs")
-});
-
-app.post("/accDeets", (req, res) =>{
-        
-})
 
 // app.get('/landing', function(req, res){
 //     con.connect(function(error){
