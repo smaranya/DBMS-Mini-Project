@@ -54,6 +54,7 @@ app.post('/signup', (req, res) =>{
     }
     let userEmail = req.body.userEmail;
     let phoneNumber = req.body.phoneNumber;
+    let n = req.body.n;
     let accNumber1 = req.body.accNumber1;
     let accType1 = req.body.accType1;
     let currentBal1 = req.body.currentBal1;
@@ -81,11 +82,25 @@ app.post('/signup', (req, res) =>{
 
             let sql2 = "INSERT INTO ACCOUNT(USER_ID, ACC_NO, ACC_TYPE, ACC_BAL) VALUES ?";
             
-            let values2 =[
+            let values2 = [];
+            if(n=1){
+                values2 = [
+                    [result.insertId, accNumber1, accType1, currentBal1]
+                ]
+            }
+            else if(n=2){
+            values2 =[
                 [result.insertId, accNumber1, accType1, currentBal1],
                 [result.insertId, accNumber2, accType2, currentBal2],
-                [result.insertId, accNumber3, accType3, currentBal3]
             ];
+            }
+            else if(n=3){
+                values2 =[
+                    [result.insertId, accNumber1, accType1, currentBal1],
+                    [result.insertId, accNumber2, accType2, currentBal2],
+                    [result.insertId, accNumber3, accType3, currentBal3],
+                ]
+            }
 
             console.log(values2);
 
