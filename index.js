@@ -30,7 +30,11 @@ app.post('/', (req, res) =>{
         });
     }
     else {
-        res.render('userland', { success: false });
+        var query2 = "select FNAME from USER WHERE USER_EMAIL = ? AND USER_PASSWORD = ?";
+        mysql.query(query2, admin, password, (error, result) =>{
+            if(error) throw error;
+            res.render('userland', { users: result, success: false });
+        })
     }
 })
 app.get('/signup', (req, res) =>{
@@ -83,18 +87,18 @@ app.post('/signup', (req, res) =>{
             let sql2 = "INSERT INTO ACCOUNT(USER_ID, ACC_NO, ACC_TYPE, ACC_BAL) VALUES ?";
             
             let values2 = [];
-            if(n=1){
+            if(n==1){
                 values2 = [
                     [result.insertId, accNumber1, accType1, currentBal1]
                 ]
             }
-            else if(n=2){
+            else if(n==2){
             values2 =[
                 [result.insertId, accNumber1, accType1, currentBal1],
                 [result.insertId, accNumber2, accType2, currentBal2],
             ];
             }
-            else if(n=3){
+            else if(n==3){
                 values2 =[
                     [result.insertId, accNumber1, accType1, currentBal1],
                     [result.insertId, accNumber2, accType2, currentBal2],
