@@ -15,12 +15,12 @@
             <th>Phone Number</th>
         </tr>
 
-        <% if(users.length > 0) { %>
-            <% for( var i = 0; i < users.length; i++ ) { %>
+        <% if(result.length > 0) { %>
+            <% for( var i = 0; i < result.length; i++ ) { %>
                 <tr>
-                    <td><%- users[i].FNAME + " "+ users[i].MNAME + " "+ users[i].LNAME%></td>
-                    <td><%- users[i].USER_EMAIL %></td>
-                    <td><%- users[i].USER_PHONE %></td>
+                    <td><%- result[i].FNAME + " "+ result[i].MNAME + " "+ result[i].LNAME%></td>
+                    <td><%- result[i].USER_EMAIL %></td>
+                    <td><%- result[i].USER_PHONE %></td>
                 </tr>
             <% } %>   
         <% }else{ %>

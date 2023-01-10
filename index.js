@@ -26,15 +26,15 @@ app.post('/', (req, res) =>{
         var query = "select * from USER";
         mysql.query(query, (error, result) => {
             if (error) throw error;
-            res.render("landing", { users: result, success: true });
+            res.render("landing", {result} );
         });
     }
     else {
-        var query2 = "select FNAME from USER WHERE USER_EMAIL = ? AND USER_PASSWORD = ?";
-        mysql.query(query2, admin, password, (error, result) =>{
-            if(error) throw error;
-            res.render('userland', { users: result, success: false });
-        })
+        // var query2 = "select FNAME from USER WHERE USER_EMAIL = ? AND USER_PASSWORD = ?";
+        // mysql.query(query2, admin, password, (error, result) =>{
+        //     if(error) throw error;
+            res.render('userland', {result});
+        // })
     }
 })
 app.get('/signup', (req, res) =>{
@@ -106,14 +106,17 @@ app.post('/signup', (req, res) =>{
                 ]
             }
 
-            console.log(values2);
-
             mysql.query(sql2, [values2], function(error, result){
                 if(error) throw error;
-                res.render('login');
+                console.log();
+                res.render('landing', {result});
             })
         })
     });
+
+    app.get('/landing', (req, res) =>{
+        res.render('landing')
+    })
 
     // app.get('/landing', (req, res) => {
     //     const admin = req.query.admin;
