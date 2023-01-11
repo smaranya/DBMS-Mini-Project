@@ -18,40 +18,42 @@ app.set('views', path.join(__dirname, "views"));
 app.get('/', (req, res) =>{
     res.render("login");
 });
-
-// app.post('/', (req, res) =>{
-//     const admin = req.body.email;
-//     const password = req.body.password;
-//     if (admin === "XYZ@gmail.com" && password === "XYZ@123") {
-//         var query = "select * from USER";
-//         mysql.query(query, (error, result) => {
-//             if (error) throw error;
-//             res.render("landing", {result} );
-//         });
-//     }
-//     else {
-//         // var query2 = "select FNAME from USER WHERE USER_EMAIL = ? AND USER_PASSWORD = ?";
-//         // mysql.query(query2, admin, password, (error, result) =>{
-//         //     if(error) throw error;
-//             res.render('userland', {result});
-//         // })
-//     }
+// app.get('/login',(req,res)=>{
+//     res.render("login")
 // })
-
-app.get('/landing',(req,res)=>{
-    const admin = req.query.email;
-    const password = req.query.password;
-    if(admin === "XYZ@gmail.com" && password === "XYZ@123"){
+app.post('/', (req, res) =>{
+    const admin = req.body.email;
+    const password = req.body.password;
+    if (admin === "XYZ@gmail.com" && password === "XYZ@123") {
         var query = "select * from USER";
-       mysql.query(query, (error, result) => {
+        mysql.query(query, (error, result) => {
             if (error) throw error;
-            res.render('landing', {result} );
-       });
+            res.render("landing", {result} );
+        });
     }
-    else{
-        res.render('/');
+    else {
+        var query2 = "select FNAME from USER WHERE USER_PASSWORD = ?";
+        mysql.query(query2, password, (error, result) =>{
+            if(error) throw error;
+            res.render('userland', {result});
+        })
     }
 })
+
+// app.get('/landing',(req,res)=>{
+//     const admin = req.query.email;
+//     const password = req.query.password;
+//     if(admin === "XYZ@gmail.com" && password === "XYZ@123"){
+//         var query = "select * from USER";
+//        mysql.query(query, (error, result) => {
+//             if (error) throw error;
+//             res.render("landing", {result});
+//        });
+//     }
+//     else{
+//         res.render("userland");
+//     }
+// })
 app.get('/signup', (req, res) =>{
     res.render("signup")
 });
@@ -123,15 +125,26 @@ app.post('/signup', (req, res) =>{
 
             mysql.query(sql2, [values2], function(error, result){
                 if(error) throw error;
-                console.log();
-                res.render('login', {result});
+                res.redirect(301, '/');
             })
         })
     });
 
     app.get('/landing', (req, res) =>{
-        res.render('landing')
+        res.render("landing")
     })
+
+    // app.post('/landing', (req, res) => {
+    //     const admin = req.query.admin;
+    //     const password = req.query.password;
+    //     if(admin === "XYZ@gmail.com" && password === "XYZ@123"){
+    //         var query = "select * from USER";
+    //         mysql.query(query, (error, result) => {
+    //             if (error) throw error;
+    //             res.render("landing", {result});
+    //        });
+    //     }
+    // })
 
     // app.get('/landing', (req, res) => {
     //     const admin = req.query.admin;
