@@ -19,22 +19,37 @@ app.get('/', (req, res) =>{
     res.render("login");
 });
 
-app.post('/', (req, res) =>{
-    const admin = req.body.email;
-    const password = req.body.password;
-    if (admin === "XYZ@gmail.com" && password === "XYZ@123") {
+// app.post('/', (req, res) =>{
+//     const admin = req.body.email;
+//     const password = req.body.password;
+//     if (admin === "XYZ@gmail.com" && password === "XYZ@123") {
+//         var query = "select * from USER";
+//         mysql.query(query, (error, result) => {
+//             if (error) throw error;
+//             res.render("landing", {result} );
+//         });
+//     }
+//     else {
+//         // var query2 = "select FNAME from USER WHERE USER_EMAIL = ? AND USER_PASSWORD = ?";
+//         // mysql.query(query2, admin, password, (error, result) =>{
+//         //     if(error) throw error;
+//             res.render('userland', {result});
+//         // })
+//     }
+// })
+
+app.get('/landing',(req,res)=>{
+    const admin = req.query.email;
+    const password = req.query.password;
+    if(admin === "XYZ@gmail.com" && password === "XYZ@123"){
         var query = "select * from USER";
-        mysql.query(query, (error, result) => {
+       mysql.query(query, (error, result) => {
             if (error) throw error;
-            res.render("landing", {result} );
-        });
+            res.render('landing', {result} );
+       });
     }
-    else {
-        // var query2 = "select FNAME from USER WHERE USER_EMAIL = ? AND USER_PASSWORD = ?";
-        // mysql.query(query2, admin, password, (error, result) =>{
-        //     if(error) throw error;
-            res.render('userland', {result});
-        // })
+    else{
+        res.render('/');
     }
 })
 app.get('/signup', (req, res) =>{
@@ -109,7 +124,7 @@ app.post('/signup', (req, res) =>{
             mysql.query(sql2, [values2], function(error, result){
                 if(error) throw error;
                 console.log();
-                res.render('landing', {result});
+                res.render('login', {result});
             })
         })
     });
