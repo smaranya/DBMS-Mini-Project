@@ -24,9 +24,11 @@ app.post('/', (req, res) =>{
     const password = req.body.password;
     if (admin === "sam@gmail.com" && password === "sam@123") {
         var query = "select * from USER";
+        var query2 = "SELECT * from TRANSACTIONS WHERE USER_ID = (SELECT USER_ID FROM USER WHERE USER_EMAIL = ?)";
         mysql.query(query, (error, result) => {
-            if (error) throw error;
-            res.render("landing", {result} );
+            mysql.query(query2, admin, (error, adminpay) =>{
+                res.render("landing", {result, adminpay});
+            })
         });
     }
     else {

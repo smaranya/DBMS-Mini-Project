@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -29,4 +29,83 @@
               
        </table>
 </body>
+</html> -->
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Page</title>
+</head>
+
+<div class="container">
+
+  <ul class="nav nav-tabs ">
+    <li class="active"><a data-toggle="tab" href="#admin">Admin</a></li>
+    <li><a data-toggle="tab" href="#adminpay">My Transactions</a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div id="admin" class="tab-pane fade in active">
+      <h1>User Details</h1>
+      <table class="table table-hover">
+        <% if(result.length > 0){ %>
+            <thread>
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Phone</th>
+                </tr>
+              </thread>
+        <% for(var i = 0 ;i<result.length;i++){ %>
+        <tbody>
+          <tr>
+            <th><%- result[i].FNAME %> </th>
+            <th><%- result[i].USER_EMAIL %> </th>
+            <th><%- result[i].USER_PHONE %> </th>
+          </tr>
+        </tbody>
+        <% } %>
+        <% }else{ %>
+        <h1>No User Data Found</h1>
+        <% } %>
+      </table>
+    </div>
+    <div id="adminpay" class="tab-pane fade">
+        <h1>My Transactions</h1>
+        <table class="table table-hover">
+          <% if(adminpay.length > 0){ %>
+            <thread>
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Amount</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Recipient</th>
+                </tr>
+              </thread>
+          <% for(var i = 0 ;i<adminpay.length;i++){ %>
+          <tbody>
+            <tr>
+              <th><%- adminpay[i].PAY_DATE %> </th>
+              <th><%- adminpay[i].PAY_AMT %> </th>
+              <th><%- adminpay[i].PAY_DESC %> </th>
+              <th><%- adminpay[i].REC_NAME %> </th>
+            </tr>
+          </tbody>
+          <% } %>
+          <% }else{ %>
+          <h3>No Transactions Found</h3>
+          <% } %>
+      </div>
+  </div>
+</div>
+
+<body>
+
+</body>
+
 </html>
