@@ -18,13 +18,11 @@ app.set('views', path.join(__dirname, "views"));
 app.get('/', (req, res) =>{
     res.render("login");
 });
-// app.get('/login',(req,res)=>{
-//     res.render("login")
-// })
+
 app.post('/', (req, res) =>{
     const admin = req.body.email;
     const password = req.body.password;
-    if (admin === "XYZ@gmail.com" && password === "XYZ@123") {
+    if (admin === "sam@gmail.com" && password === "sam@123") {
         var query = "select * from USER";
         mysql.query(query, (error, result) => {
             if (error) throw error;
@@ -40,20 +38,6 @@ app.post('/', (req, res) =>{
     }
 })
 
-// app.get('/landing',(req,res)=>{
-//     const admin = req.query.email;
-//     const password = req.query.password;
-//     if(admin === "XYZ@gmail.com" && password === "XYZ@123"){
-//         var query = "select * from USER";
-//        mysql.query(query, (error, result) => {
-//             if (error) throw error;
-//             res.render("landing", {result});
-//        });
-//     }
-//     else{
-//         res.render("userland");
-//     }
-// })
 app.get('/signup', (req, res) =>{
     res.render("signup")
 });
@@ -145,34 +129,6 @@ app.post('/signup', (req, res) =>{
     //        });
     //     }
     // })
-
-    // app.get('/landing', (req, res) => {
-    //     const admin = req.query.admin;
-    //     const password = req.query.password;
-    //     if (admin === "admin@" && password === "admin@123") {
-    //         var query = "select * from student";
-    //         mysql.query(query, (error, result) => {
-    //             if (error) throw error;
-    //             res.render("adminHome", { result, success: true });
-    //         });
-    //     }
-    //     else {
-    //         res.render('home', { success: false });
-    //     }
-    // })
-
-// app.get('/landing', function(req, res){
-//     con.connect(function(error){
-//         if(error) console.log(error);
-
-//         var data = 'SELECT * from USER';
-//         con.query(data, function(error, result){
-//             if(error) console.log(error)
-//             res.render(__dirname+"/views/landing", {users: result});
-//         })
-
-//     })
-// })
 
 app.listen(port, ()=>{
     console.log(`Server connected on ${port}`);
