@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title>Userpage</title>
+</head>
+<body>
+    <div class="container">
+        <ul class="nav nav-tabs ">
+          <li class="active"><a data-toggle="tab" href="#rewards">Rewards</a></li>
+        </ul>
+        <div class="tab-content">
+          <div id="rewards" class="tab-pane fade in active">
+            <h1>My Rewards: </h1>
+            
+            <table class="table table-hover">
+              <% if(result.length > 0){ %>
+                  <thread>
+                      <tr>
+                        <th scope="col">Description</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Expiry Date</th>
+                        <th scope="col">Your Name</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thread>
+              <% for(var i = 0 ;i<result.length;i++){ %>
+              <tbody>
+                <tr>
+                  <th><%- result[i].DESCR %> </th>
+                  <th><%- result[i].CODE %> </th>
+                  <th><%- result[i].EXPIRY_DATE %> </th>
+                  <!-- <form method="post">
+                  <th><input type="text" name="fName" id="firstName" class="form-control form-control-lg" placeholder="Name"/></th>
+                  <th> <button type="submit"><a href="">Claim</a></button></th>
+                  <th> -->
+                    <th>
+                    <form method="get" action="/claim"> 
+                      <input type="email" name="email" placeholder="Email">
+                      <input type="text" name="code" placeholder="Code">
+                  <button type="submit">  Submit </button></th>
+                  <!-- </form> -->
+                  </form>
+              <% } %>
+              <% }else{ %>
+              <h1>No Rewards Found</h1>
+              <% } %>
+            </table>
+          </div>  
+        </div>
+    </div>
+</body>
+</html>

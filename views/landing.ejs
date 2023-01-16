@@ -1,35 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users Data</title>
-</head>
-<body>
-       <h1>Users using this application</h1> 
-       <table>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone Number</th>
-        </tr>
-
-        <% if(result.length > 0) { %>
-            <% for( var i = 0; i < result.length; i++ ) { %>
-                <tr>
-                    <td><%- result[i].FNAME + " "+ result[i].MNAME + " "+ result[i].LNAME%></td>
-                    <td><%- result[i].USER_EMAIL %></td>
-                    <td><%- result[i].USER_PHONE %></td>
-                </tr>
-            <% } %>   
-        <% }else{ %>
-            <h1>User Data not found!</h1>
-        <% } %>    
-              
-       </table>
-</body>
-</html> -->
 <html lang="en">
 
 <head>
@@ -46,12 +14,10 @@
 
   <ul class="nav nav-tabs ">
     <li class="active"><a data-toggle="tab" href="#admin">Admin</a></li>
-    <li><a data-toggle="tab" href="#adminpay">My Transactions</a></li>
   </ul>
-
   <div class="tab-content">
     <div id="admin" class="tab-pane fade in active">
-      <h1>User Details</h1>
+      <h1>Users: </h1>
       <table class="table table-hover">
         <% if(result.length > 0){ %>
             <thread>
@@ -59,14 +25,16 @@
                   <th scope="col">Name</th>
                   <th scope="col">Email</th>
                   <th scope="col">Phone</th>
+                  <th scope="col"> </th>
                 </tr>
               </thread>
         <% for(var i = 0 ;i<result.length;i++){ %>
         <tbody>
           <tr>
             <th><%- result[i].FNAME %> </th>
-            <th><%- result[i].USER_EMAIL %> </th>
+            <th name="useremail"><%- result[i].USER_EMAIL %> </th>
             <th><%- result[i].USER_PHONE %> </th>
+            <th> <a href="/delete-user?id=<%- result[i].USER_ID %>">Delete</a></th>
           </tr>
         </tbody>
         <% } %>
@@ -75,32 +43,7 @@
         <% } %>
       </table>
     </div>
-    <div id="adminpay" class="tab-pane fade">
-        <h1>My Transactions</h1>
-        <table class="table table-hover">
-          <% if(adminpay.length > 0){ %>
-            <thread>
-                <tr>
-                  <th scope="col">Date</th>
-                  <th scope="col">Amount</th>
-                  <th scope="col">Description</th>
-                  <th scope="col">Recipient</th>
-                </tr>
-              </thread>
-          <% for(var i = 0 ;i<adminpay.length;i++){ %>
-          <tbody>
-            <tr>
-              <th><%- adminpay[i].PAY_DATE %> </th>
-              <th><%- adminpay[i].PAY_AMT %> </th>
-              <th><%- adminpay[i].PAY_DESC %> </th>
-              <th><%- adminpay[i].REC_NAME %> </th>
-            </tr>
-          </tbody>
-          <% } %>
-          <% }else{ %>
-          <h3>No Transactions Found</h3>
-          <% } %>
-      </div>
+    
   </div>
 </div>
 

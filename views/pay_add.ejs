@@ -1,0 +1,89 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add a Transaction</title>
+</head>
+
+<div class="container">
+    <h2><%- title %></h2>
+    <form action="/save" method="post">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="text" class="form-control" id="email" name="email">
+        </div>
+        <div class="form-group">
+          <label for="accno">Account Number</label>
+          <input type="text" class="form-control" id="accNo" name="accNo">
+        </div>
+        <div class="form-group">
+            <label for="date">Date</label>
+            <input type="text" class="form-control" id="pay_date" placeholder="yyyy-mm-dd" name="pay_date">
+        </div>
+        <div class="form-group">
+            <label for="amount">Amount</label>
+            <input type="text" class="form-control" id="pay_amt" name="pay_amt">
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" class="form-control" id="pay_desc" name="pay_desc">
+        </div>
+        <div class="form-group">
+            <label for="recipient">Recipient Name</label>
+            <input type="text" class="form-control" id="rec_name" name="rec_name">
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+
+              <label for="paymentMethod">Payment Method: </label>
+
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="paymentMethod" id="enterprise"
+                  value="enterprise" checked/>
+                <label class="form-check-label" for="Enterprise">Enterprise</label>
+              </div>
+
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="paymentMethod" id="phoneNumber"
+                  value="phoneNumber"/>
+                <label class="form-check-label" for="PhoneNumber">Phone Number</label>
+              </div>
+
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="paymentMethod" id="bankAccount"
+                  value="phoneNumber"/>
+                <label class="form-check-label" for="bankAccount">Bank Account</label>
+              </div>
+            </div>
+            <div class="col-md-4 mb-4 pb-2">
+      
+              <div class="form-outline">
+                <input type="tel" name="phoneNumber" id="phoneNumber" class="form-control form-control-lg"/>
+                <label class="form-label" for="phoneNumber">Phone Number of Recipient</label>
+              </div>
+
+            </div>
+            <div class="col-md-4 mb-4 pb-2">
+      
+              <div class="form-outline">
+                <input type="number" name="recAcc" id="RecipientAccount" class="form-control form-control-lg"/>
+                <label class="form-label" for="recAccNo">Account Number of Recipient</label>
+              </div>
+
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+</div>
+
+<body>
+
+</body>
+
+</html>

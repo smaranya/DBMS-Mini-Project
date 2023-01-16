@@ -4,9 +4,59 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <title>Userpage</title>
 </head>
 <body>
-    <h1>Hello <%- result[0].FNAME %></h1>
+    <h1 style="margin-left: 15px;">Hello <%- result[0].FNAME %></h1>
+    <div class="container">
+        <ul class="nav nav-tabs ">
+          <li class="active"><a data-toggle="tab" href="#transactions">Transactions</a></li>
+        </ul>
+        <div class="tab-content">
+          <div id="transactions" class="tab-pane fade in active">
+            <h1>My Transactions: </h1>
+            <div class="row">
+              <div class="col-md-6 mb-4 pb-2">
+                
+                <div class="form-outline">
+                  <button class="btn btn-primary"><a href="/add" style="color: white">Add Transaction</a></button><br/><br/>
+                </div>
+
+              </div>
+              <div class="col-md-6 mb-4 pb-2">
+                <button class="btn btn-primary"><a href="/rewards?name=<%- result[0].USER_EMAIL  %> " style="color: white">See Rewards</a></button><br/><br/>
+              </div>
+            </div>
+            
+            <table class="table table-hover">
+              <% if(pay.length > 0){ %>
+                  <thread>
+                      <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Recipient</th>
+                      </tr>
+                    </thread>
+              <% for(var i = 0 ;i<pay.length;i++){ %>
+              <tbody>
+                <tr>
+                  <th><%- pay[i].PAY_DATE %> </th>
+                  <th name="useremail"><%- pay[i].PAY_AMT %> </th>
+                  <th><%- pay[i].PAY_DESC %> </th>
+                  <th><%- pay[i].REC_NAME %></th>
+                </tr>
+              </tbody>
+              <% } %>
+              <% }else{ %>
+              <h1>No Transaction Data Found</h1>
+              <% } %>
+            </table>
+          </div>  
+        </div>
+    </div>
 </body>
 </html>
