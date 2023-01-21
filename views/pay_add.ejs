@@ -10,35 +10,54 @@
   <title>Add a Transaction</title>
 </head>
 
-<div class="container">
+<body>
+  <div class="container">
+  <br>
+  <br>
     <h2><%- title %></h2>
+    <br>
     <form action="/save" method="post">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="text" class="form-control" id="email" name="email">
+        <div class="row">
+          <div class="form-group col-md-4">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" id="email" name="email">
+          </div>
         </div>
-        <div class="form-group">
-          <label for="accno">Account Number</label>
-          <input type="text" class="form-control" id="accNo" name="accNo">
+        <div class="row">
+          <div class="form-group col-md-4">
+            <label>Account Number </label>
+              <% for( let i = 0; i < result.length; i++ ) { %>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="accNo" id="accNo"
+                    value="<%- result[i].ACC_NO %>"/>
+                  <label class="form-check-label" for="accNo"><%- result[i].ACC_NO %></label>
+                </div>
+              <% } %>
+          </div>
         </div>
-        <div class="form-group">
-            <label for="date">Date</label>
-            <input type="text" class="form-control" id="pay_date" placeholder="yyyy-mm-dd" name="pay_date">
+        <div class="row">
+          <div class="form-group col-md-4">
+          <label for="date">Date</label>
+          <input type="text" class="form-control" id="pay_date" placeholder="yyyy-mm-dd" name="pay_date">
+          </div>
+          <div class="form-group col-md-4">
+          <label for="amount">Amount</label>
+          <input type="text" class="form-control" id="pay_amt" name="pay_amt">
+          </div>
         </div>
-        <div class="form-group">
-            <label for="amount">Amount</label>
-            <input type="text" class="form-control" id="pay_amt" name="pay_amt">
-        </div>
-        <div class="form-group">
+        <div class="row">
+          <div class="form-group col-md-4">
             <label for="description">Description</label>
             <input type="text" class="form-control" id="pay_desc" name="pay_desc">
         </div>
-        <div class="form-group">
+        <div class="form-group col-md-4">
             <label for="recipient">Recipient Name</label>
             <input type="text" class="form-control" id="rec_name" name="rec_name">
         </div>
+        </div>
+        <br>
         <div class="row">
-            <div class="col-md-6 mb-4">
+            <div class="col-md-4 mb-4">
 
               <label for="paymentMethod">Payment Method: </label>
 
@@ -81,9 +100,6 @@
     </form>
 
 </div>
-
-<body>
-
 </body>
 
 </html>

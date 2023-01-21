@@ -35,17 +35,14 @@
                   <th><%- result[i].DESCR %> </th>
                   <th><%- result[i].CODE %> </th>
                   <th><%- result[i].EXPIRY_DATE %> </th>
-                  <!-- <form method="post">
-                  <th><input type="text" name="fName" id="firstName" class="form-control form-control-lg" placeholder="Name"/></th>
-                  <th> <button type="submit"><a href="">Claim</a></button></th>
-                  <th> -->
-                    <th>
-                    <form method="get" action="/claim"> 
-                      <input type="email" name="email" placeholder="Email">
-                      <input type="text" name="code" placeholder="Code">
-                  <button type="submit">  Submit </button></th>
-                  <!-- </form> -->
+                  <th>
+                  <form method="get" action="/claim"  autocomplete="off">
+                      <input type="email" name="email" placeholder="Email" class="form-control" required>
+                      <input type="text" name="code" placeholder="Code" class="form-control">
+                      <button type="submit" class="btn btn-primary"> Submit </button></th>
                   </form>
+                </tr>
+              </tbody>
               <% } %>
               <% }else{ %>
               <h1>No Rewards Found</h1>
