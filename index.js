@@ -28,7 +28,7 @@ app.get('/', (req, res) =>{
 app.post('/', (req, res) =>{
     const admin = req.body.email;
     const password = req.body.password;
-    // if (admin === "sam@gmail.com" && password === "sam@123") {
+        //if (admin === "sam@gmail.com" && password === "sam@123") {
         var query = "select * from USER WHERE ADMIN_EMAIL = ? AND USER_EMAIL != ?";
         data = [admin, admin];
         var query2 = "SELECT * from TRANSACTIONS WHERE USER_ID = (SELECT USER_ID FROM USER WHERE USER_EMAIL = ?)";
@@ -163,14 +163,28 @@ app.post('/signup', (req, res) =>{
     app.post('/savebal', (req, res) =>{
         const uid = req.query.uid;
         let sql1 = 'SELECT * FROM USER WHERE USER_ID = ?';
-        let {accNo, add_amt} = req.body;
+        let {accNo, add_desc, addDate} = req.body;
+        let addAmt = req.body.addAmt;
+        let snd_name = 'FROM '+req.body.snd_name;
         mysql.query(sql1, uid, (err, user)=>{
             email = user[0].USER_EMAIL;
             password = user[0].USER_PASSWORD;
-            let sql2 = 'UPDATE ACCOUNT SET ACC_BAL = (ACC_BAL + ?) WHERE ACC_NO = ?';
-            let data = [add_amt, accNo];
-            mysql.query(sql2, data, (err, addbal)=>{
-                res.redirect('/userland?name='+email+'&password='+password);
+            let sql2 = "SELECT * FROM ACCOUNT WHERE ACC_NO = ?";
+            let sql3 = "INSERT INTO TRANSACTIONS(USER_ID, ACC_ID, PAY_AMT, PAY_DATE, PAY_DESC, REC_NAME) VALUES ?"
+            
+            let sql4 = 'UPDATE ACCOUNT SET ACC_BAL = (ACC_BAL + ?) WHERE ACC_NO = ?';
+            
+            mysql.query(sql2, accNo, (err, account)=>{
+                actid = account[0].ACC_ID;
+                let data1 = [
+                    [uid, actid, addAmt, addDate, add_desc, snd_name]
+                ]
+                mysql.query(sql3, [data1], (err, addtran) =>{
+                    let data = [addAmt, accNo];
+                    mysql.query(sql4, data, (err, addbal)=>{
+                        res.redirect('/userland?name='+email+'&password='+password);
+                    })
+                })
             })
         })
     })
@@ -235,9 +249,23 @@ app.post('/signup', (req, res) =>{
     });
 
     app.get("/rewards", (req, res) =>{
+        const email = req.query.email;
         var query = "SELECT * FROM REWARDS WHERE USER_ID IS NULL";
+        var query2 = "SELECT * FROM USER WHERE USER_EMAIL = ?";
         mysql.query(query, (error, result) => {
-            res.render('rewards', {result})
+            mysql.query(query2, email, (err, user) =>{
+                uid = user[0].USER_ID;
+                let query3 = "SELECT * FROM REWARDS WHERE USER_ID = ?";
+                mysql.query(query3, uid, (err, claim)=>{
+                    if(claim.length == 0){
+                        alert('No rewards claimed yet!')
+                        res.render('rewards', {result, user, claim});
+                    }
+                    else{
+                        res.render('rewards', {result, user, claim});
+                    }
+                })
+            })
         })
     })
 app.listen(port, ()=>{
@@ -270,6 +298,12 @@ app.get('/claim', (req, res) =>{
             uid = result[0].USER_ID;
             let data = [uid, code];
             mysql.query(query2, data ,(err,result1)=>{
+                if(result1.changedRows === 0){
+                    alert('Invalid Code!');
+                }
+                else{
+                    alert('Claimed successfully: '+code);
+                }
                 res.redirect("/rewards?email="+email);
         })}
     })

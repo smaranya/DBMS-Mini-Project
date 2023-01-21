@@ -19,7 +19,7 @@
             alert("User Registered Successfully");
           }
       </script>
-    <title>Sign Up</title>
+    <title>Sign Up - EMS</title>
 </head>
 <body style="background-image: -webkit-linear-gradient(135deg, #42275a, #753a88);">
     <section>
@@ -63,7 +63,7 @@
       
                         <div class="form-outline datepicker w-100">
                           <input type="password" name="password" class="form-control form-control-lg" id="password" required/>
-                          <label for="password" class="form-label">Password</label>
+                          <label for="password" class="form-label" minlength="8">Password</label>
                         </div>
       
                       </div>
@@ -71,11 +71,11 @@
       
                         <div class="form-outline datepicker w-100">
                           <input type="password" name="confirmPassword" class="form-control form-control-lg" id="password" required/>
-                          <label for="password" class="form-label">Confirm Password</label>
+                          <label for="password" class="form-label" minlength="8">Confirm Password</label>
                         </div>
       
                       </div>
-                      <div class="row">
+                      <div class="row" id="user/admin">
                       <div class="col-md-6 mb-4">
       
                         <h6 class="mb-2 pb-1">User Type: </h6>
