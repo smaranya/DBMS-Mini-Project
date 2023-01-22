@@ -63,7 +63,10 @@
               <h3>No Transaction Data Found</h3>
               <% } %>
             </table>
-            <h4>Current Cumulative Balance: ₹<%- balance[0].CUM_BAL %></h4>
+            <h4>Current Balance: </h4>
+            <% for( let i = 0; i < balance.length; i++ ) { %>
+                <h4>Account <%= (i+1) %> : ₹<%- balance[i].ACC_BAL %></h4>
+            <% } %>
           </div>  
           <br>
           <br>

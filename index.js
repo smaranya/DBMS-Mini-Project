@@ -28,8 +28,8 @@ app.get('/', (req, res) =>{
 app.post('/', (req, res) =>{
     const admin = req.body.email;
     const password = req.body.password;
-        //if (admin === "sam@gmail.com" && password === "sam@123") {
-        var query = "select * from USER WHERE ADMIN_EMAIL = ? AND USER_EMAIL != ?";
+    // if (admin === "sam@gmail.com" && password === "sam@123") {
+        var query = "select * from USER WHERE ADMIN_EMAIL = ?";
         data = [admin, admin];
         var query2 = "SELECT * from TRANSACTIONS WHERE USER_ID = (SELECT USER_ID FROM USER WHERE USER_EMAIL = ?)";
         mysql.query(query, data, (error, result) => {
@@ -44,6 +44,33 @@ app.post('/', (req, res) =>{
     // }
 })
 
+app.get('/addAdmin', (req, res) =>{
+    res.render('newAdmin');
+})
+
+app.post('/addAdmin', (req, res) =>{
+    let fname = req.body.firstName;
+    let mname = req.body.middleName;
+    let lname = req.body.lastName;
+    let password;
+    if(req.body.password == req.body.confirmPassword){
+        password = req.body.password;
+    }
+    let userEmail = req.body.userEmail;
+    let phoneNumber = req.body.phoneNumber;
+    let sql1 = "INSERT INTO USER(USER_PASSWORD, FNAME, MNAME, LNAME, USER_EMAIL, USER_PHONE, ADMIN_EMAIL) VALUES ?";
+
+        let values1 = [
+            [password, fname, mname, lname, userEmail, phoneNumber, userEmail]
+        ];
+
+        mysql.query(sql1, [values1], function(error, result){
+            if(error) throw error;
+            res.redirect('/');
+        })
+
+})
+
 app.get('/signup', (req, res) =>{
     res.render("signup")
 });
@@ -52,16 +79,10 @@ app.post('/signup', (req, res) =>{
     let fname = req.body.firstName;
     let mname = req.body.middleName;
     let lname = req.body.lastName;
+    let admin = req.query.admin;
     let password;
     if(req.body.password == req.body.confirmPassword){
         password = req.body.password;
-    }
-    let adminEmail;
-    if(req.body.userType == 'admin'){
-        adminEmail = req.body.userEmail;
-    }
-    else{
-        adminEmail = req.body.adminEmail;
     }
     let userEmail = req.body.userEmail;
     let phoneNumber = req.body.phoneNumber;
@@ -85,7 +106,7 @@ app.post('/signup', (req, res) =>{
         let sql1 = "INSERT INTO USER(USER_PASSWORD, FNAME, MNAME, LNAME, USER_EMAIL, USER_PHONE, ADMIN_EMAIL) VALUES ?";
 
         let values1 = [
-            [password, fname, mname, lname, userEmail, phoneNumber, adminEmail]
+            [password, fname, mname, lname, userEmail, phoneNumber, admin]
         ];
 
         mysql.query(sql1, [values1], function(error, result){
@@ -126,7 +147,7 @@ app.post('/signup', (req, res) =>{
         var query2 = 'SELECT * from TRANSACTIONS WHERE TRANSACTIONS.USER_ID = USER.USER_ID AND USER.USER_EMAIL = ?';
         mysql.query(query, admin, (error, result) => {
             mysql.query(query2, admin, (error, adminpay) =>{
-                res.render("landing", {result});
+                res.render("landing", {result, adminpay});
             })
         });
     })
@@ -262,7 +283,7 @@ app.post('/signup', (req, res) =>{
                         res.render('rewards', {result, user, claim});
                     }
                     else{
-                        res.render('rewards', {result, user, claim});
+                        res.render('rewards', {result, user, claim})
                     }
                 })
             })
@@ -276,15 +297,6 @@ app.get('/claim', (req, res) =>{
     const code = req.query.code;
     const email = req.query.email;
 
-    // if(code === null && email === null){
-    //     alert('Please Enter Code and Email to Claim!')
-    // }
-    // else if(code === null){
-    //     alert('Please Enter Code To Claim!')
-    // }
-    // else{
-    //     alert('Please Enter Email to Claim!')
-    // }
     
     var query = "select * from USER where USER_EMAIL=?";
     var query2 = "update rewards set USER_ID = ? where CODE = ?";
@@ -324,8 +336,8 @@ app.get('/delete-user',(req,res)=>{
 
 app.get('/userLand',(req,res)=>{
     const {password} = req.query
-    var query2 = "select * from USER WHERE USER_PASSWORD = ?";
-    var query4 = "SELECT SUM(ACC_BAL) AS CUM_BAL FROM ACCOUNT WHERE USER_ID = ?";
+    var query2 = "select * from USER WHERE USER_PASSWORD = ? AND USER_EMAIL != ADMIN_EMAIL";
+    var query4 = "SELECT * FROM ACCOUNT WHERE USER_ID = ?";
     var querypay = "select * from TRANSACTIONS WHERE USER_ID = ?";
     mysql.query(query2, password, (error, result) =>{
         let uid;
