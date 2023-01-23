@@ -249,8 +249,9 @@ app.post('/signup', (req, res) =>{
                 ];
                 mysql.query(sql, [data], (err, pay)=> {
                     if(err) throw err;
-                    let sqlupdate = "SELECT (ACC_BAL - PAY_AMT) AS REM_BAL FROM ACCOUNT, TRANSACTIONS WHERE ACCOUNT.ACC_ID = TRANSACTIONS.ACC_ID AND ACCOUNT.ACC_ID = ?"
-                    mysql.query(sqlupdate, actid, (err, update) =>{
+                    let sqlupdate = "SELECT (ACC_BAL - ?) AS REM_BAL FROM ACCOUNT, TRANSACTIONS WHERE ACCOUNT.ACC_ID = TRANSACTIONS.ACC_ID AND ACCOUNT.ACC_ID = ?"
+                    data1 = [amt, actid];
+                    mysql.query(sqlupdate, data1, (err, update) =>{
                         rem = update[0].REM_BAL;
                         let updatefinal = "UPDATE ACCOUNT SET ACC_BAL = ? WHERE ACC_ID = ?";
                         data = [rem, actid];
