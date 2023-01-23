@@ -10,17 +10,13 @@ dotenv.config();
 const port = process.env.PORT;
 const alert = require('alert');
 
-
-// import {alert} from 'node-popup';
-
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, "views"));
 
-
+//Admin Login Page
 app.get('/', (req, res) =>{
     res.render("login");
 });
@@ -44,6 +40,7 @@ app.post('/', (req, res) =>{
     // }
 })
 
+//Admin Registration Page
 app.get('/addAdmin', (req, res) =>{
     res.render('newAdmin');
 })
@@ -71,6 +68,7 @@ app.post('/addAdmin', (req, res) =>{
 
 })
 
+//User SignUp Page
 app.get('/signup', (req, res) =>{
     res.render("signup")
 });
@@ -141,6 +139,7 @@ app.post('/signup', (req, res) =>{
         })
     });
 
+    //Admin Landing Page: Where they can see, add and delete users
     app.get('/landing', (req, res) =>{
         let admin = "sam@gmail.com";
         var query = 'select * from USER WHERE USER_EMAIL != ?';
@@ -151,12 +150,50 @@ app.post('/signup', (req, res) =>{
             })
         });
     })
+    
+    app.get('/delete-user',(req,res)=>{
+    const id = req.query.id;
+    var query = "delete from USER where USER_ID = ?";
+    var query2 = "delete from ACCOUNT where USER_ID = (SELECT USER_ID FROM USER WHERE USER_ID = ?)";
+    mysql.query(query,[id],(error,result)=>{
+        mysql.query(query2, [id], (error, result) =>{
+            if(error) throw error;
+            res.redirect('landing')
+         })
+        })
+    })
+    
+    //User Login
+    app.get('/userLogin',(req,res)=>{
+    res.render("userlogin");
+    })
 
-  app.get('/change-password',(req,res)=>{
-    res.render("forgot_password");
-  });
+    //User Landing Page
+    app.get('/userLand',(req,res)=>{
+    const {password} = req.query
+    var query2 = "select * from USER WHERE USER_PASSWORD = ? AND USER_EMAIL != ADMIN_EMAIL";
+    var query4 = "SELECT * FROM ACCOUNT WHERE USER_ID = ?";
+    var querypay = "select * from TRANSACTIONS WHERE USER_ID = ?";
+    mysql.query(query2, password, (error, result) =>{
+        let uid;
+        if(result.length === 0){
+            alert('Invalid User Credentials!');
+            res.redirect('/userLogin');
+        }
+        else{
+        uid =result[0].USER_ID;
+        mysql.query(query4, uid, (error, balance)=>{
+            mysql.query(querypay, uid, (error, pay) => {
+                if(error) throw error;
+                res.render('userland', {result, pay, balance});
+            })
+        })
+        }
+    })
+})
 
-  
+
+    //Transaction adding form  
 
     app.get('/add', (req, res) =>{
         const uid = req.query.uid;
@@ -168,47 +205,6 @@ app.post('/signup', (req, res) =>{
             })
         })
     });
-
-    app.get('/addmoney', (req, res)=>{
-        const uid = req.query.uid;
-        let sql1 = "SELECT * FROM ACCOUNT WHERE USER_ID = ?"
-        mysql.query(sql1, uid, (err, account)=> {
-            res.render('add_money', {
-                title: 'Add Money To Your Account',
-                subtitle: '....And Continue making Payments!',
-                account
-            });
-        })
-    });
-
-    app.post('/savebal', (req, res) =>{
-        const uid = req.query.uid;
-        let sql1 = 'SELECT * FROM USER WHERE USER_ID = ?';
-        let {accNo, add_desc, addDate} = req.body;
-        let addAmt = req.body.addAmt;
-        let snd_name = 'FROM '+req.body.snd_name;
-        mysql.query(sql1, uid, (err, user)=>{
-            email = user[0].USER_EMAIL;
-            password = user[0].USER_PASSWORD;
-            let sql2 = "SELECT * FROM ACCOUNT WHERE ACC_NO = ?";
-            let sql3 = "INSERT INTO TRANSACTIONS(USER_ID, ACC_ID, PAY_AMT, PAY_DATE, PAY_DESC, REC_NAME) VALUES ?"
-            
-            let sql4 = 'UPDATE ACCOUNT SET ACC_BAL = (ACC_BAL + ?) WHERE ACC_NO = ?';
-            
-            mysql.query(sql2, accNo, (err, account)=>{
-                actid = account[0].ACC_ID;
-                let data1 = [
-                    [uid, actid, addAmt, addDate, add_desc, snd_name]
-                ]
-                mysql.query(sql3, [data1], (err, addtran) =>{
-                    let data = [addAmt, accNo];
-                    mysql.query(sql4, data, (err, addbal)=>{
-                        res.redirect('/userland?name='+email+'&password='+password);
-                    })
-                })
-            })
-        })
-    })
 
     app.post('/save', (req, res) =>{
         let sql1 = 'SELECT * FROM USER WHERE USER_EMAIL = ?';
@@ -270,6 +266,51 @@ app.post('/signup', (req, res) =>{
         })
     });
 
+    //Adding Money To User Account
+
+    app.get('/addmoney', (req, res)=>{
+        const uid = req.query.uid;
+        let sql1 = "SELECT * FROM ACCOUNT WHERE USER_ID = ?"
+        mysql.query(sql1, uid, (err, account)=> {
+            res.render('add_money', {
+                title: 'Add Money To Your Account',
+                subtitle: '....And Continue making Payments!',
+                account
+            });
+        })
+    });
+
+    app.post('/savebal', (req, res) =>{
+        const uid = req.query.uid;
+        let sql1 = 'SELECT * FROM USER WHERE USER_ID = ?';
+        let {accNo, add_desc, addDate} = req.body;
+        let addAmt = req.body.addAmt;
+        let snd_name = 'FROM '+req.body.snd_name;
+        mysql.query(sql1, uid, (err, user)=>{
+            email = user[0].USER_EMAIL;
+            password = user[0].USER_PASSWORD;
+            let sql2 = "SELECT * FROM ACCOUNT WHERE ACC_NO = ?";
+            let sql3 = "INSERT INTO TRANSACTIONS(USER_ID, ACC_ID, PAY_AMT, PAY_DATE, PAY_DESC, REC_NAME) VALUES ?"
+            
+            let sql4 = 'UPDATE ACCOUNT SET ACC_BAL = (ACC_BAL + ?) WHERE ACC_NO = ?';
+            
+            mysql.query(sql2, accNo, (err, account)=>{
+                actid = account[0].ACC_ID;
+                let data1 = [
+                    [uid, actid, addAmt, addDate, add_desc, snd_name]
+                ]
+                mysql.query(sql3, [data1], (err, addtran) =>{
+                    let data = [addAmt, accNo];
+                    mysql.query(sql4, data, (err, addbal)=>{
+                        res.redirect('/userland?name='+email+'&password='+password);
+                    })
+                })
+            })
+        })
+    })
+
+    //Rewards Page
+
     app.get("/rewards", (req, res) =>{
         const email = req.query.email;
         var query = "SELECT * FROM REWARDS WHERE USER_ID IS NULL";
@@ -290,11 +331,8 @@ app.post('/signup', (req, res) =>{
             })
         })
     })
-app.listen(port, ()=>{
-    console.log(`Server connected on ${port}`);
-});
 
-app.get('/claim', (req, res) =>{
+    app.get('/claim', (req, res) =>{
     const code = req.query.code;
     const email = req.query.email;
 
@@ -322,42 +360,10 @@ app.get('/claim', (req, res) =>{
     })
 })
 
-app.get('/delete-user',(req,res)=>{
-    const id = req.query.id;
-    var query = "delete from USER where USER_ID = ?";
-    var query2 = "delete from ACCOUNT where USER_ID = (SELECT USER_ID FROM USER WHERE USER_ID = ?)";
-    // query += "delet from TRANSACTIONS where USER_ID = ?";
-    mysql.query(query,[id],(error,result)=>{
-        mysql.query(query2, [id], (error, result) =>{
-            if(error) throw error;
-            res.redirect('landing')
-        })
-    })
-})
+app.listen(port, ()=>{
+    console.log(`Server connected on ${port}`);
+});
 
-app.get('/userLand',(req,res)=>{
-    const {password} = req.query
-    var query2 = "select * from USER WHERE USER_PASSWORD = ? AND USER_EMAIL != ADMIN_EMAIL";
-    var query4 = "SELECT * FROM ACCOUNT WHERE USER_ID = ?";
-    var querypay = "select * from TRANSACTIONS WHERE USER_ID = ?";
-    mysql.query(query2, password, (error, result) =>{
-        let uid;
-        if(result.length === 0){
-            alert('Invalid User Credentials!');
-            res.redirect('/userLogin');
-        }
-        else{
-        uid =result[0].USER_ID;
-        mysql.query(query4, uid, (error, balance)=>{
-            mysql.query(querypay, uid, (error, pay) => {
-                if(error) throw error;
-                res.render('userland', {result, pay, balance});
-            })
-        })
-        }
-    })
-})
 
-app.get('/userLogin',(req,res)=>{
-    res.render("userlogin");
-})
+
+
