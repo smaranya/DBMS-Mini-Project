@@ -65,7 +65,13 @@
             </table>
             <h4>Current Balance: </h4>
             <% for( let i = 0; i < balance.length; i++ ) { %>
-                <h4>Account <%= (i+1) %> : ₹<%- balance[i].ACC_BAL %></h4>
+                <% if (balance[i].ACC_BAL <= 1000) { %>
+                  <div class="alert alert-danger" role="alert">
+                    Balance is Low! Add Money to Continue Transactions! 
+                  </div>
+                <% } else { %>
+                  <h4>Account <%= (i+1) %> : ₹<%- balance[i].ACC_BAL %></h4>
+                <% } %>
             <% } %>
           </div>  
           <br>
