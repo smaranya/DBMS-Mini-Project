@@ -108,8 +108,11 @@ app.post('/signup', (req, res) =>{
         ];
 
         mysql.query(sql1, [values1], function(error, result){
-            if(error) throw error;
-
+            if(error){
+                alert('Fill Appropriate details');
+                res.redirect('/signup?admin='+admin);
+            }
+            else{
             let sql2 = "INSERT INTO ACCOUNT(USER_ID, ACC_NO, ACC_TYPE, ACC_BAL) VALUES ?";
             
             let values2 = [];
@@ -133,9 +136,13 @@ app.post('/signup', (req, res) =>{
             }
 
             mysql.query(sql2, [values2], function(error, result){
-                if(error) throw error;
+                if(error){
+                    alert('Fill Appropriate Details');
+                    res.redirect('/signup?admin='+admin);
+                };
                 res.redirect(301, '/userLogin');
             })
+            };
         })
     });
 
@@ -158,7 +165,8 @@ app.post('/signup', (req, res) =>{
     mysql.query(query,[id],(error,result)=>{
         mysql.query(query2, [id], (error, result) =>{
             if(error) throw error;
-            res.redirect('landing')
+            alert('Redirecting you to admin login!');
+            res.redirect('/');
          })
         })
     })
@@ -176,7 +184,7 @@ app.post('/signup', (req, res) =>{
     var querypay = "select * from TRANSACTIONS WHERE USER_ID = ?";
     mysql.query(query2, password, (error, result) =>{
         let uid;
-        if(result.length === 0){
+        if(result.length === 0 || password != result[0].USER_PASSWORD){
             alert('Invalid User Credentials!');
             res.redirect('/userLogin');
         }
@@ -296,6 +304,7 @@ app.post('/signup', (req, res) =>{
             
             mysql.query(sql2, accNo, (err, account)=>{
                 actid = account[0].ACC_ID;
+
                 let data1 = [
                     [uid, actid, addAmt, addDate, add_desc, snd_name]
                 ]
