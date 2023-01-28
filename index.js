@@ -304,7 +304,6 @@ app.post('/signup', (req, res) =>{
             
             mysql.query(sql2, accNo, (err, account)=>{
                 actid = account[0].ACC_ID;
-
                 let data1 = [
                     [uid, actid, addAmt, addDate, add_desc, snd_name]
                 ]
