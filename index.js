@@ -343,7 +343,6 @@ app.post('/signup', (req, res) =>{
     app.get('/claim', (req, res) =>{
     const code = req.query.code;
     const email = req.query.email;
-
     
     var query = "select * from USER where USER_EMAIL=?";
     var query2 = "update rewards set USER_ID = ? where CODE = ?";
